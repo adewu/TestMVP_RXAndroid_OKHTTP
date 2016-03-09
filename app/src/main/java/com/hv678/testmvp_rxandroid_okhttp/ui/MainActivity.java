@@ -1,5 +1,6 @@
 package com.hv678.testmvp_rxandroid_okhttp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,22 +15,29 @@ import android.widget.Toast;
 
 import com.hv678.testmvp_rxandroid_okhttp.R;
 import com.hv678.testmvp_rxandroid_okhttp.bean.MeDetailBean;
-import com.hv678.testmvp_rxandroid_okhttp.interfaces.UserView;
-import com.hv678.testmvp_rxandroid_okhttp.presenter.UserPresenter;
+import com.hv678.testmvp_rxandroid_okhttp.mvpview.MvpLoginView;
+import com.hv678.testmvp_rxandroid_okhttp.presenter.LoginPresenter;
 import com.hv678.testmvp_rxandroid_okhttp.utils.MD5Util;
 
-public class MainActivity extends AppCompatActivity implements UserView,View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements MvpLoginView,View.OnClickListener{
 
     private EditText accountET,passwordET;
     private Button confirmBtn;
-    private UserPresenter mUserPresenter;
+    private LoginPresenter mLoginPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Test");
         setSupportActionBar(toolbar);
-
+        toolbar.setNavigationIcon(R.mipmap.icon);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,TestActivity.class));
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements UserView,View.OnC
                         .setAction("Action", null).show();
             }
         });
-        mUserPresenter = new UserPresenter(this);
+        mLoginPresenter = new LoginPresenter(this);
         accountET = (EditText) findViewById(R.id.accountET);
         passwordET = (EditText) findViewById(R.id.passwordET);
         confirmBtn = (Button) findViewById(R.id.confirmBtn);
@@ -79,12 +87,12 @@ public class MainActivity extends AppCompatActivity implements UserView,View.OnC
 
     @Override
     public void showProgressDialog() {
-
+        //TODO:
     }
 
     @Override
     public void hideProgressDialog() {
-
+        //TODO:
     }
 
     @Override
@@ -96,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements UserView,View.OnC
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.confirmBtn:
-                mUserPresenter.getUser(accountET.getText().toString(), MD5Util.getMD5String(passwordET.getText().toString()));
+                mLoginPresenter.getUser(accountET.getText().toString(), MD5Util.getMD5String(passwordET.getText().toString()));
             break;
         }
     }

@@ -1,7 +1,9 @@
 package com.hv678.testmvp_rxandroid_okhttp.presenter;
 
+import android.os.Bundle;
+
 import com.hv678.testmvp_rxandroid_okhttp.bean.MeDetailBean;
-import com.hv678.testmvp_rxandroid_okhttp.interfaces.UserView;
+import com.hv678.testmvp_rxandroid_okhttp.mvpview.MvpLoginView;
 import com.hv678.testmvp_rxandroid_okhttp.model.UserModel;
 
 import rx.Subscriber;
@@ -12,12 +14,12 @@ import rx.schedulers.Schedulers;
  * Created by wuxm on 2016/1/25.
  * E-mail 380510218@qq.com
  */
-public class UserPresenter {
-    private UserView mUserView;
+public class LoginPresenter implements BaseActivityPresenter {
+    private MvpLoginView mMvpLoginView;
     private UserModel mUserModel;
 
-    public UserPresenter(UserView mUserView) {
-        this.mUserView = mUserView;
+    public LoginPresenter(MvpLoginView mMvpLoginView) {
+        this.mMvpLoginView = mMvpLoginView;
         mUserModel = new UserModel();
     }
 
@@ -25,19 +27,34 @@ public class UserPresenter {
         mUserModel.getUser(account,password).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<MeDetailBean>() {
             @Override
             public void onCompleted() {
-                mUserView.hideProgressDialog();
+                mMvpLoginView.hideProgressDialog();
             }
 
             @Override
             public void onError(Throwable e) {
-                mUserView.showError(e.getMessage());
-                mUserView.hideProgressDialog();
+                mMvpLoginView.showError(e.getMessage());
+                mMvpLoginView.hideProgressDialog();
             }
 
             @Override
             public void onNext(MeDetailBean meDetailBean) {
-                mUserView.updateView(meDetailBean);
+                mMvpLoginView.updateView(meDetailBean);
             }
         });
+    }
+
+    @Override
+    public void onCreate(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 }
